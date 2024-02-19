@@ -1,0 +1,6 @@
+@StockOptionsScraper_HostAddress = http://localhost:5218
+
+GET {{StockOptionsScraper_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

@@ -1,0 +1,11 @@
+{
+  "Version": 1,
+  "Hash": "k8V2KsACZkDHIul2zhYmOtutWsBJYfwFmvLcLKmaWa8=",
+  "Source": "StockOptionsScraper",
+  "BasePath": "_content/StockOptionsScraper",
+  "Mode": "Default",
+  "ManifestType": "Build",
+  "ReferencedProjectsConfiguration": [],
+  "DiscoveryPatterns": [],
+  "Assets": []
+}
