@@ -32,3 +32,4 @@ C:\Users\tkhar\OneDrive\Documents\Web Dev\Projects\Stock Options App\App\StockOp
 C:\Users\tkhar\OneDrive\Documents\Web Dev\Projects\Stock Options App\App\StockOptionsScraper\obj\Debug\net8.0\StockOptionsScraper.pdb
 C:\Users\tkhar\OneDrive\Documents\Web Dev\Projects\Stock Options App\App\StockOptionsScraper\obj\Debug\net8.0\StockOptionsScraper.genruntimeconfig.cache
 C:\Users\tkhar\OneDrive\Documents\Web Dev\Projects\Stock Options App\App\StockOptionsScraper\obj\Debug\net8.0\ref\StockOptionsScraper.dll
+C:\Users\tkhar\OneDrive\Documents\Web Dev\Projects\Stock Options App\App\StockOptionsScraper\obj\Debug\net8.0\StockOptionsScraper.sourcelink.json

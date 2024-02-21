@@ -2,6 +2,8 @@
 
 public class MoneyWebForecast
 {
+    public string? CompanyName { get; set; }
+    public string? CompanyCode { get; set; }
     public string? MarketCap { get; set; }
     public string? EPS_TTM { get; set; }
     public string? PEratio { get; set; }

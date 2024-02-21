@@ -18,10 +18,25 @@ public class MoneyWebForecastController
         _logger = logger;
     }
 
-    [HttpGet("{companyCode}")]
+    [HttpGet("Forecast{companyCode}")]
     public async Task<MoneyWebForecast> GetForecast(string companyCode) 
     {
         var forecast = await _scrapingService.GetForecastAsync(companyCode);
         return forecast;
+    }
+
+    [HttpGet("Companies")]
+    public async Task<List<MoneyWebCompany>> GetCompanies() 
+    {
+        var companies = await _scrapingService.GetCompaniesAsync();
+        return companies;
+    }
+
+    [HttpGet("ForecastList")]
+    public async Task<List<MoneyWebForecast>> GetForecastList() 
+    {
+        var companies = await _scrapingService.GetCompaniesAsync();
+        var forecasts = await _scrapingService.GetMoneyWebForecastList(companies);
+        return forecasts;
     }
 }
