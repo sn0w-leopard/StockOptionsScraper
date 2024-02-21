@@ -1,5 +1,7 @@
+using Microsoft.OpenApi.Models;
 using StockOptionsScraper.Interfaces;
 using StockOptionsScraper.Services;
+using Swashbuckle.AspNetCore.SwaggerGen;
 
 namespace StockOptionsScraper;
 public class Program
@@ -8,9 +10,14 @@ public class Program
     {
         var builder = WebApplication.CreateBuilder(args);
 
+        //docker
+        builder.WebHost.UseKestrel()
+            .UseUrls($"http://+:{Environment.GetEnvironmentVariable("PORT") ?? "80"}");
+
         // Add services
         ConfigureWebHost(builder);
         ConfigureServices(builder.Services);
+        ConfigureLogging(builder);
 
         var app = builder.Build();
 
@@ -21,11 +28,20 @@ public class Program
         app.MapControllers();
 
         //middleware
+        app.UseExceptionHandler("/error");
         app.UseSwagger();
         app.UseSwaggerUI();
+        //app.UseAuthentication();
 
         app.Run();
     }
+
+    private static void ConfigureLogging(WebApplicationBuilder builder)
+    {
+        builder.Logging.AddConsole();
+        builder.Logging.AddDebug();
+    }
+
     private static void ConfigureWebHost(WebApplicationBuilder builder)
     {
         builder.Configuration.AddJsonFile("appsettings.json");
@@ -36,7 +52,8 @@ public class Program
     public static void ConfigureServices(IServiceCollection services)
     {
         services.AddScoped<IScrapingService, ScrapingService>();
+        /*         services.AddAuthentication(options => {
+                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
+                }).AddJwtBearer(); */
     }
 }
-
-
