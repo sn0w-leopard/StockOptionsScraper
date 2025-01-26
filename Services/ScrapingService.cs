@@ -5,7 +5,83 @@ using StockOptionsScraper.Models;
 namespace StockOptionsScraper.Services;
 
 public class ScrapingService: IScrapingService
+
 {
+    public async Task<MoneyWebBalanceSheet> GetBalanceSheetAsync(string companyCode)
+    {
+        var url = $"https://www.moneyweb.co.za/tools-and-data/click-a-company/{companyCode}";
+        var web = new HtmlWeb();
+        var doc = await web.LoadFromWebAsync(url);
+
+        var balanceSheet = new MoneyWebBalanceSheet { CompanyCode = companyCode };
+
+        var tables = doc.DocumentNode.SelectNodes("//table");
+        
+        var balanceSheetTable = tables?.FirstOrDefault(t => 
+            t.PreviousSibling?.PreviousSibling?
+            .SelectNodes(".//li")?
+            .Any(li => li.InnerText.Contains("BALANCE SHEET")) ?? false);
+
+        if (balanceSheetTable != null)
+        {
+            // Get headers
+            var headers = balanceSheetTable.SelectNodes(".//thead//h6")?.ToList();
+            if (headers?.Count >= 3)
+            {
+                balanceSheet.FirstPeriodName = headers[1].InnerText.Trim();
+                balanceSheet.SecondPeriodName = headers[2].InnerText.Trim();
+            }
+
+                    // Get rows
+            var rows = balanceSheetTable.SelectNodes(".//tr[.//a[contains(@id, 'display_balancesheet')]]");
+            var rows2 = balanceSheetTable.SelectNodes(".//tr[td[@class='text-left']]");
+            if (rows != null)
+            {
+                foreach (var row in rows)
+                {
+                    var cells = row.SelectNodes(".//td")?.ToList();
+                    if (cells != null && cells.Count >= 3)
+                    {
+                        var title = cells[0].SelectSingleNode(".//a").GetAttributeValue("title", "");
+                        var firstPeriodValue = cells[1].InnerText.Trim();
+                        var secondPeriodValue = cells[2].InnerText.Trim();
+
+                        switch (title)
+                        {
+                            case "Fixed Assets":
+                                balanceSheet.FixedAssetsFirstPeriod = firstPeriodValue;
+                                balanceSheet.FixedAssetsSecondPeriod = secondPeriodValue;
+                                break;
+                            case "Total Current Assets":
+                                balanceSheet.TotalCurrentAssetsFirstPeriod = firstPeriodValue;
+                                balanceSheet.TotalCurrentAssetsSecondPeriod = secondPeriodValue;
+                                break;
+                            case "Ordinary Shareholders' Interest":
+                                balanceSheet.OrdinaryShareholdersInterestFirstPeriod = firstPeriodValue;
+                                balanceSheet.OrdinaryShareholdersInterestSecondPeriod = secondPeriodValue;
+                                break;
+                            case "Minority Interest":
+                                balanceSheet.MinorityInterestFirstPeriod = firstPeriodValue;
+                                balanceSheet.MinorityInterestSecondPeriod = secondPeriodValue;
+                                break;
+                            case "Total Long-Term Liabilities":
+                                balanceSheet.TotalLongTermLiabilitiesFirstPeriod = firstPeriodValue;
+                                balanceSheet.TotalLongTermLiabilitiesSecondPeriod = secondPeriodValue;
+                                break;
+                            case "Total Current Liabilities":
+                                balanceSheet.TotalCurrentLiabilitiesFirstPeriod = firstPeriodValue;
+                                balanceSheet.TotalCurrentLiabilitiesSecondPeriod = secondPeriodValue;
+                                break;
+                        }
+
+                    }
+                }
+            }
+        }
+
+        return balanceSheet;
+    }
+
     public async Task<List<MoneyWebCompany>> GetCompaniesAsync()
     {
         try
