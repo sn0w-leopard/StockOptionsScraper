@@ -8,12 +8,12 @@ namespace StockOptionsScraper.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class MoneyWebForecastController : ControllerBase
+public class MoneyWebController : ControllerBase
 {
-    private readonly ILogger<MoneyWebForecastController> _logger;
+    private readonly ILogger<MoneyWebController> _logger;
     private readonly IScrapingService _scrapingService;
 
-    public MoneyWebForecastController(ILogger<MoneyWebForecastController> logger, IScrapingService scrapingService)
+    public MoneyWebController(ILogger<MoneyWebController> logger, IScrapingService scrapingService)
     {
         _scrapingService = scrapingService;
         _logger = logger;

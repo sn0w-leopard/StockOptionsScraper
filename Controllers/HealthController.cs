@@ -6,8 +6,8 @@ namespace StockOptionsScraper.Controllers;
 [Route("api/[controller]")] 
 public class HealthController : ControllerBase
 {    
-    private readonly ILogger<MoneyWebForecastController> _logger;
-    public HealthController(ILogger<MoneyWebForecastController> logger)
+    private readonly ILogger<HealthController> _logger;
+    public HealthController(ILogger<HealthController> logger)
     {
         _logger = logger;
     }
