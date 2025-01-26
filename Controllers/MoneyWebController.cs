@@ -76,6 +76,23 @@ public class MoneyWebController : ControllerBase
         }
     }
 
+    [HttpGet("balanceSheets")]
+    public async Task<List<MoneyWebForecast>> GetBalanceSheetList() 
+    {
+        _logger.LogInformation("Getting companies' balance sheets from MoneyWeb");
+        try
+        {
+            var companies = await _scrapingService.GetCompaniesAsync();
+            var balanceSheets = await _scrapingService.GetMoneyWebForecastList(companies);
+            _logger.LogInformation("Companies' balance sheets from MoneyWeb returned");
+            return balanceSheets;
+        }
+        catch (System.Exception)
+        {           
+            throw;
+        }
+    }
+
     [HttpGet("companies")]
     public async Task<List<MoneyWebCompany>> GetCompanies() 
     {

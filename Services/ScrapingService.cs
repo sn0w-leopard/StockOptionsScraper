@@ -24,7 +24,6 @@ public class ScrapingService: IScrapingService
 
         if (balanceSheetTable != null)
         {
-            // Get headers
             var headers = balanceSheetTable.SelectNodes(".//thead//h6")?.ToList();
             if (headers?.Count >= 3)
             {
@@ -32,7 +31,6 @@ public class ScrapingService: IScrapingService
                 balanceSheet.SecondPeriodName = headers[2].InnerText.Trim();
             }
 
-                    // Get rows
             var rows = balanceSheetTable.SelectNodes(".//tr[.//a[contains(@id, 'display_balancesheet')]]");
             var rows2 = balanceSheetTable.SelectNodes(".//tr[td[@class='text-left']]");
             if (rows != null)
@@ -216,6 +214,29 @@ public class ScrapingService: IScrapingService
             }
 
             return forecasts;
+        }
+        catch (Exception ex)
+        {
+            throw new Exception("Error occured while rtrieving forecasts", ex);
+        }
+    }
+    
+    public async Task<List<MoneyWebBalanceSheet>> GetMoneyWebBalanceSheetList(List<MoneyWebCompany> companies)
+    {
+        try
+        {            
+            var balanceSheets = new List<MoneyWebBalanceSheet>();
+
+            foreach (var company in companies)
+            {
+                if (!String.IsNullOrEmpty(company.value))
+                {
+                    var balanceSheet = await GetBalanceSheetAsync(company.value);
+                    balanceSheets.Add(balanceSheet); 
+                }
+            }
+
+            return balanceSheets;
         }
         catch (Exception ex)
         {

@@ -7,4 +7,5 @@ public interface IScrapingService
   public Task<MoneyWebBalanceSheet> GetBalanceSheetAsync(string companyCode);
   public Task<List<MoneyWebCompany>> GetCompaniesAsync();
   public Task<List<MoneyWebForecast>> GetMoneyWebForecastList(List<MoneyWebCompany> companies);
+  public Task<List<MoneyWebBalanceSheet>> GetMoneyWebBalanceSheetList(List<MoneyWebCompany> companies);
 }
