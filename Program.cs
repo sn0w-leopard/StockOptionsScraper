@@ -1,3 +1,4 @@
+using Abot2.Crawler;
 using Microsoft.OpenApi.Models;
 using StockOptionsScraper.Interfaces;
 using StockOptionsScraper.Services;
@@ -51,9 +52,9 @@ public class Program
     }
     public static void ConfigureServices(IServiceCollection services)
     {
-        services.AddScoped<IScrapingService, ScrapingService>();
-        /*         services.AddAuthentication(options => {
-                    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
-                }).AddJwtBearer(); */
+        //services.AddScoped<IScrapingService, ScrapingService>();
+        services.AddScoped<IScrapingService, AbotScrapingService>();
+        services.AddScoped<InvestingScrapingService>();
+        services.AddSingleton<PoliteWebCrawler>();
     }
 }

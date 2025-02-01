@@ -243,4 +243,13 @@ public class ScrapingService: IScrapingService
             throw new Exception("Error occured while rtrieving forecasts", ex);
         }
     }
+    
+    public async Task<InvestingDividendData> GetDividendDataAsync(string companyCode)
+    {
+        throw new NotImplementedException();
+    }
+    public async Task<List<InvestingDividendData>> GetDividendDataListAsync(List<MoneyWebCompany> companies)
+    {
+        throw new NotImplementedException();
+    }
 }
