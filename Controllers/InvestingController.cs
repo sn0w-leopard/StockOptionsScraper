@@ -32,9 +32,9 @@ public class InvestingController : ControllerBase
 
         foreach (var company in companies)
         {
-            var mapping = await _investingService.GetInvestingMapping(company.value, company.label);
+            var mapping = await _investingService.GetInvestingMapping(company.value.ToUpper(), company.label.ToUpper());
             mappings.Add(mapping);
-            await Task.Delay(1000); // Rate limiting
+            //await Task.Delay(1000); // Rate limiting
         }
 
         return Ok(mappings);
@@ -44,7 +44,7 @@ public class InvestingController : ControllerBase
     public async Task<ActionResult<InvestingDividendData>> GetDividends(string moneyWebCode)
     {
         var companies = await _moneyWebService.GetCompaniesAsync();
-        var company = companies.FirstOrDefault(c => c.value == moneyWebCode);
+        var company = companies.FirstOrDefault(c => c.value.ToUpper() == moneyWebCode.ToUpper());
         
         if (company == null)
             return NotFound($"Company with code {moneyWebCode} not found");

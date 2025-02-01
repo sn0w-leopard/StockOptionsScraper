@@ -20,32 +20,52 @@ public class InvestingScrapingService
 
     public async Task<CompanyMapping> GetInvestingMapping(string moneyWebCode, string companyLabel)
     {
-        var searchUrl = $"https://za.investing.com/search/?q={Uri.EscapeDataString(companyLabel)}";
+
+        _logger.LogInformation($"Searching for {companyLabel} ({moneyWebCode})");
+
+        var cleanCompanyName = companyLabel.Split('-').Last().Trim();
+        _logger.LogInformation($"Clean company name: {cleanCompanyName}");
+        
+        var searchUrl = $"https://www.investing.com/search/?q={Uri.EscapeDataString(cleanCompanyName)}";
+        _logger.LogInformation($"Search URL: {searchUrl}");
+
+
+        var web = new HtmlWeb();
         var doc = await _web.LoadFromWebAsync(searchUrl);
 
-        var resultsContainer = doc.DocumentNode.SelectSingleNode("//div[@class='js-inner-all-results-quotes-wrapper newResultsContainer quatesTable']");
-        
-        if (resultsContainer != null)
+        _logger.LogInformation("Search response received");
+
+        var searchResults = doc.DocumentNode.SelectNodes("//div[contains(@class, 'js-inner-all-results-quotes-wrapper')]");
+        _logger.LogInformation($"Found {searchResults?.Count ?? 0} result containers");
+
+        if (searchResults != null)
         {
-            var resultLink = resultsContainer.SelectSingleNode(".//a[@class='js-inner-all-results-quote-item row']");
-            if (resultLink != null)
+            var jseListing = searchResults.SelectNodes(".//a")
+                ?.FirstOrDefault(x => x.InnerText.Contains("JSE") || 
+                                    x.InnerText.Contains("Johannesburg"));
+
+            if (jseListing != null)
             {
+                _logger.LogInformation($"Found JSE listing: {jseListing.InnerText}");
+                
                 return new CompanyMapping
                 {
                     MoneyWebCode = moneyWebCode,
-                    MoneyWebName = companyLabel,
-                    InvestingSymbol = resultLink.SelectSingleNode(".//span[@class='second']")?.InnerText.Trim(),
-                    InvestingName = resultLink.SelectSingleNode(".//span[@class='third']")?.InnerText.Trim(),
-                    InvestingUrl = resultLink.GetAttributeValue("href", ""),
+                    MoneyWebName = cleanCompanyName,
+                    InvestingSymbol = jseListing.SelectSingleNode(".//span[@class='second']")?.InnerText,
+                    InvestingName = jseListing.SelectSingleNode(".//span[@class='third']")?.InnerText,
+                    InvestingUrl = jseListing.GetAttributeValue("href", ""),
                     HasMatch = true
                 };
             }
         }
 
+        _logger.LogWarning($"No JSE listing found for {cleanCompanyName}");
+
         return new CompanyMapping
         {
             MoneyWebCode = moneyWebCode,
-            MoneyWebName = companyLabel,
+            MoneyWebName = cleanCompanyName,
             HasMatch = false
         };
     }

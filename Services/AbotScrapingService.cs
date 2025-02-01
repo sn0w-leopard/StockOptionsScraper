@@ -16,7 +16,8 @@ namespace StockOptionsScraper.Services
         {
             var config = new CrawlConfiguration
             {
-                MinCrawlDelayPerDomainMilliSeconds = 1000,
+                //MinCrawlDelayPerDomainMilliSeconds = 1000,
+                MinCrawlDelayPerDomainMilliSeconds = 1 ,
                 MaxConcurrentThreads = 10,
                 UserAgentString = "StockOptionsScraper Bot"
             };
